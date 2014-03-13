@@ -29,7 +29,7 @@ exports.findAll = {
     var problems = problemsData.getAll();
 
     if (problems) {
-      writeResponse(res, problems);
+      writeResponse(res, {problems: problems});
     }
     else {
       throw swe.notFound('problems');

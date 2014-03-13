@@ -15,10 +15,31 @@
     };
   }
 
+  function queryDef(key) {
+    return {
+      method: 'GET',
+      isArray: true,
+      transformResponse: function(body, headersGetter) {
+        var data,
+          type = headersGetter('Content-Type');
+
+        if (type && type.indexOf('application/json') === 0 ) {
+          data = JSON.parse(body);
+          return data[key] ? data[key] : data;
+        }
+
+        return body;
+      }
+    };
+  }
+
   angular.module('app.homePages', ['app.config', 'ngResource', 'angularSpinkit'])
 
     .factory('videos', function(API_BASE, $resource) {
-      var res = $resource(API_BASE + '/videos/:id/');
+      var res = $resource(
+        API_BASE + '/videos/:id/', null, {'query': queryDef('videos')}
+      );
+
       var api = {
         create: function(video){
           return res.save(video).$promise;
@@ -29,7 +50,9 @@
     })
 
     .factory('problems', function(API_BASE, $resource) {
-      return commonAPIs($resource(API_BASE + '/problems/:id'));
+      return commonAPIs($resource(
+        API_BASE + '/problems/:id', null, {'query': queryDef('problems')}
+      ));
     })
 
     .factory('questions', function(API_BASE, $resource) {
@@ -203,7 +226,7 @@
         $scope.isYouTube = res.url && res.url.indexOf('www.youtube.com/watch?') > -1;
       });
     })
-    
+
     .controller("CreateVideoCtrl",function($scope, $location, videos){
       $scope.title = "Create video";
 

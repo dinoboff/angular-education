@@ -29,7 +29,7 @@ exports.findAll = {
     var videos = videosData.getAll();
 
     if (videos) {
-      writeResponse(res, videos);
+      writeResponse(res, {'videos': videos});
     }
     else {
       throw swe.notFound('videos');
