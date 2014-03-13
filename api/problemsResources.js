@@ -54,7 +54,7 @@ exports.findById = {
     if (!req.params.problemId) {
       throw swe.invalid('id');
     }
-    var id = parseInt(req.params.problemId);
+    var id = parseInt(req.params.problemId, 10);
     var problem = problemsData.getById(id);
 
     if (problem) {
@@ -95,7 +95,7 @@ exports.postAnswer = {
       throw swe.invalid('payload');
     }
     else {
-      var id = parseInt(req.params.questionId);
+      var id = parseInt(req.params.questionId, 10);
       var answer = parseInt(body.answer, 10);
       var answerObj = problemsData.postAnswer(id, answer);
 
